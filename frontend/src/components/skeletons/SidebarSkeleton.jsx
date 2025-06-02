@@ -1,13 +1,11 @@
 import { Users } from "lucide-react";
 
 const SidebarSkeleton = () => {
-  // Create 8 skeleton items
-  const skeletonContacts = Array(8).fill(null);
+  const skeletonContacts = Array.from({ length: 8 });
 
   return (
     <aside
-      className="h-full w-20 lg:w-72 border-r border-base-300 
-    flex flex-col transition-all duration-200"
+      className="h-full w-20 lg:w-72 border-r border-base-300 flex flex-col transition-all duration-200"
     >
       {/* Header */}
       <div className="border-b border-base-300 w-full p-5">
@@ -23,7 +21,7 @@ const SidebarSkeleton = () => {
           <div key={idx} className="w-full p-3 flex items-center gap-3">
             {/* Avatar skeleton */}
             <div className="relative mx-auto lg:mx-0">
-              <div className="skeleton size-12 rounded-full" />
+              <div className="skeleton w-12 h-12 rounded-full" />
             </div>
 
             {/* User info skeleton - only visible on larger screens */}
