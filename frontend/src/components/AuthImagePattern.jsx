@@ -1,4 +1,3 @@
-import React from "react";
 const AuthImagePattern = ({ title, subtitle }) => {
   return (
     <div className="hidden lg:flex items-center justify-center bg-base-200 p-12">
@@ -7,7 +6,7 @@ const AuthImagePattern = ({ title, subtitle }) => {
           {[...Array(9)].map((_, i) => (
             <div
               key={i}
-              className={`aspect-square rounded-2xl bg-primary opacity-10 ${
+              className={`aspect-square rounded-2xl bg-primary/10 ${
                 i % 2 === 0 ? "animate-pulse" : ""
               }`}
             />

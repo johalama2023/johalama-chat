@@ -14,11 +14,9 @@ export const useChatStore = create((set, get) => ({
     set({ isUsersLoading: true });
     try {
       const res = await axiosInstance.get("/messages/users");
-      set({ users: res.data || [] });
+      set({ users: res.data });
     } catch (error) {
-      toast.error(
-        error?.response?.data?.message || "Error al obtener usuarios."
-      );
+      toast.error(error.response.data.message);
     } finally {
       set({ isUsersLoading: false });
     }
@@ -28,28 +26,20 @@ export const useChatStore = create((set, get) => ({
     set({ isMessagesLoading: true });
     try {
       const res = await axiosInstance.get(`/messages/${userId}`);
-      set({ messages: res.data || [] });
+      set({ messages: res.data });
     } catch (error) {
-      toast.error(
-        error?.response?.data?.message || "Error al obtener mensajes."
-      );
+      toast.error(error.response.data.message);
     } finally {
       set({ isMessagesLoading: false });
     }
   },
-
   sendMessage: async (messageData) => {
     const { selectedUser, messages } = get();
-    if (!selectedUser) return toast.error("Selecciona un usuario primero");
-
     try {
-      const res = await axiosInstance.post(
-        `/messages/send/${selectedUser._id}`,
-        messageData
-      );
+      const res = await axiosInstance.post(`/messages/send/${selectedUser._id}`, messageData);
       set({ messages: [...messages, res.data] });
     } catch (error) {
-      toast.error(error?.response?.data?.message || "Error al enviar mensaje.");
+      toast.error(error.response.data.message);
     }
   },
 
@@ -58,15 +48,14 @@ export const useChatStore = create((set, get) => ({
     if (!selectedUser) return;
 
     const socket = useAuthStore.getState().socket;
-    socket.off("newMessage"); // prevenir duplicados
 
     socket.on("newMessage", (newMessage) => {
-      const isMessageSentFromSelectedUser = newMessage.senderId !== selectedUser._id
-      if (isMessageSentFromSelectedUser) return;
+      const isMessageSentFromSelectedUser = newMessage.senderId === selectedUser._id;
+      if (!isMessageSentFromSelectedUser) return;
 
-      set((state) => ({
-        messages: [...state.messages, newMessage],
-      }));
+      set({
+        messages: [...get().messages, newMessage],
+      });
     });
   },
 
